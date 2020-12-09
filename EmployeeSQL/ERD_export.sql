@@ -15,7 +15,7 @@ CREATE TABLE "Departments" (
 );
 
 CREATE TABLE "Department_Employees" (
-    "Emp_No" INT(6)   NOT NULL,
+    "Emp_No" INT   NOT NULL,
     "Dept_No" VARCHAR(4)   NOT NULL,
     CONSTRAINT "pk_Department_Employees" PRIMARY KEY (
         "Emp_No"
@@ -23,7 +23,7 @@ CREATE TABLE "Department_Employees" (
 );
 
 CREATE TABLE "Department_Managers" (
-    "Emp_No" INT(6)   NOT NULL,
+    "Emp_No" INT   NOT NULL,
     "Dept_No" VARCHAR(4)   NOT NULL,
     CONSTRAINT "pk_Department_Managers" PRIMARY KEY (
         "Emp_No"
@@ -31,7 +31,7 @@ CREATE TABLE "Department_Managers" (
 );
 
 CREATE TABLE "Employees" (
-    "Emp_No" INT(6)   NOT NULL,
+    "Emp_No" INT   NOT NULL,
     "Emp_Title_ID" VARCHAR(5)   NOT NULL,
     "Birth_Date" DATE   NOT NULL,
     "First_Name" VARCHAR(20)   NOT NULL,
@@ -44,8 +44,8 @@ CREATE TABLE "Employees" (
 );
 
 CREATE TABLE "Salaries" (
-    "Emp_No" INT(6)   NOT NULL,
-    "Salary" INT(6)   NOT NULL,
+    "Emp_No" INT   NOT NULL,
+    "Salary" INT   NOT NULL,
     CONSTRAINT "pk_Salaries" PRIMARY KEY (
         "Emp_No"
      )
