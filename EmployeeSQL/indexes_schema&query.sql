@@ -79,6 +79,8 @@ SELECT emp_no AS "employee number", last_name AS "last name", first_name AS "fir
 FROM Employees;
 
 --2.List first name, last name, and hire date for employees who were hired in 1986.
+
+--Note on index, probably better off without index
 EXPLAIN SELECT first_name AS "first name", last_name AS "last name", hire_date AS "hire date"
 FROM Employees
 WHERE hire_date BETWEEN '1986-01-01' AND '1986-12-31';
@@ -113,13 +115,15 @@ INNER JOIN Departments"ON
 
 --5.List first name, last name, and sex for employees whose first name is "Hercules" 
 --and last names begin with "B."
+
+--Note on index: multi-index is the best, follow by partial index, index, then without index
 EXPLAIN SELECT first_name AS "first name", last_name AS "last name", "sex"
 FROM Employees
 WHERE first_name = 'Hercules'
 AND last_name LIKE 'B%';
 
 --Create partial indexes of first_name and last_name
-DROP INDEX IF EXISTS first_name_index, last_name_index
+DROP INDEX IF EXISTS first_name_index, last_name_index;
 CREATE INDEX first_name_index ON Employees (first_name) WHERE first_name = 'Hercules';
 CREATE INDEX last_name_index ON Employees (last_name) WHERE last_name LIKE 'B%';
 
@@ -137,6 +141,62 @@ CREATE INDEX last_name_index ON Employees (last_name);
 DROP INDEX IF EXISTS name_index;
 CREATE INDEX name_index ON Employees (first_name, last_name);
 
+--6.List all employees in the Sales department, including their employee number, 
+--last name, first name, and department name.
 
+--Note on index, probably better off without index
+EXPLAIN SELECT Employees.emp_no AS "employee number", Employees.last_name AS "last name", 
+	Employees.first_name AS "first name", 
+	Departments.dept_name AS "department name"
+FROM Department_Employees
+INNER JOIN Employees ON
+Employees.emp_no = Department_Employees.emp_no
+INNER JOIN Departments ON
+Departments.dept_no = Department_Employees.dept_no
+WHERE Departments.dept_name = 'Sales';
+
+--Create a partial index of dept_name
+DROP INDEX IF EXISTS dept_name_index;
+CREATE INDEX dept_name_index ON Departments (dept_name) WHERE dept_name = 'Sales';
+
+--Create a index of dept_name
+DROP INDEX IF EXISTS dept_name_index;
+CREATE INDEX dept_name_index ON Departments (dept_name);
+
+--7.List all employees in the Sales and Development departments, 
+--including their employee number, last name, first name, and department name.
+
+--Note on index, probably better off without index
+EXPLAIN SELECT Employees.emp_no AS "employee number", Employees.last_name AS "last name", 
+	Employees.first_name AS "first name", 
+	Departments.dept_name AS "department name"
+FROM Department_Employees
+INNER JOIN Employees ON
+Employees.emp_no = Department_Employees.emp_no
+INNER JOIN Departments ON
+Departments.dept_no = Department_Employees.dept_no
+WHERE Departments.dept_name = 'Sales'
+OR Departments.dept_name = 'Development';
+
+--Create a index of dept_name
+DROP INDEX IF EXISTS dept_name_index;
+CREATE INDEX dept_name_index ON Departments (dept_name);
+
+--8.In descending order, list the frequency count of employee last names, i.e., 
+--how many employees share each last name.
+
+--Note on index, index of last_name specifying DESC is the best, then index of last_name and no index
+EXPLAIN SELECT last_name AS "last name", COUNT(last_name) AS "Count of Last Name"
+FROM Employees
+GROUP BY last_name
+ORDER BY "Count of Last Name" DESC;
+
+--Create a index of last_name
+DROP INDEX IF EXISTS lastname_index;
+CREATE INDEX lastname_index ON Employees (last_name);
+
+--Create a index of last_name specifying DESC
+DROP INDEX IF EXISTS lastname_index;
+CREATE INDEX lastname_index ON Employees (last_name DESC);
 
 	
