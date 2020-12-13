@@ -70,3 +70,73 @@ REFERENCES Departments (dept_no);
 
 ALTER TABLE Department_Managers ADD CONSTRAINT fk_Department_Managers_emp_no FOREIGN KEY(emp_no)
 REFERENCES Employees (emp_no);
+
+-- Data Analysis
+
+-- 1. List the following details of each employee: employee number, last name, first name, sex, and salary.
+SELECT emp_no AS "employee number", last_name AS "last name", first_name AS "first name",
+	sex, (SELECT salary FROM Salaries WHERE Salaries.emp_no = Employees.emp_no)
+FROM Employees;
+
+--2.List first name, last name, and hire date for employees who were hired in 1986.
+EXPLAIN SELECT first_name AS "first name", last_name AS "last name", hire_date AS "hire date"
+FROM Employees
+WHERE hire_date BETWEEN '1986-01-01' AND '1986-12-31';
+
+--Index for hire_date
+CREATE INDEX hire_date_index ON Employees (hire_date);
+
+EXPLAIN SELECT first_name AS "first name", last_name AS "last name", hire_date AS "hire date"
+FROM Employees
+WHERE hire_date BETWEEN '1986-01-01' AND '1986-12-31';
+
+--3.List the manager of each department with the following information: 
+--department number, department name, the manager's employee number, last name, first name.	
+SELECT Departments.dept_no AS "department number", 
+	Departments.dept_name AS "department name", Employees.emp_no AS "employee number",
+	Employees.last_name AS "last name", Employees.first_name AS "first name"
+From Department_Managers
+INNER JOIN Employees ON
+	Employees.emp_no = Department_Managers.emp_no
+INNER JOIN Departments ON
+	Departments.dept_no = Department_Managers.dept_no;
+
+--4.List the department of each employee with the following information: 
+--employee number, last name, first name, and department name.
+SELECT Department_Employees.emp_no AS "employee number", Employees.last_name AS "last name", 
+	Employees.first_name AS "first name", Departments.dept_name AS "department name"
+FROM Department_Employees
+INNER JOIN Employees ON
+	Employees.emp_no = Department_Employees.emp_no
+INNER JOIN Departments"ON
+	Departments.dept_no = Department_Employees.dept_no;
+
+--5.List first name, last name, and sex for employees whose first name is "Hercules" 
+--and last names begin with "B."
+EXPLAIN SELECT first_name AS "first name", last_name AS "last name", "sex"
+FROM Employees
+WHERE first_name = 'Hercules'
+AND last_name LIKE 'B%';
+
+--Create partial indexes of first_name and last_name
+DROP INDEX IF EXISTS first_name_index, last_name_index
+CREATE INDEX first_name_index ON Employees (first_name) WHERE first_name = 'Hercules';
+CREATE INDEX last_name_index ON Employees (last_name) WHERE last_name LIKE 'B%';
+
+EXPLAIN SELECT first_name AS "first name", last_name AS "last name", "sex"
+FROM Employees
+WHERE first_name = 'Hercules'
+AND last_name LIKE 'B%';
+
+--Create indexes of first_name and last_name
+DROP INDEX IF EXISTS first_name_index, last_name_index
+CREATE INDEX first_name_index ON Employees (first_name);
+CREATE INDEX last_name_index ON Employees (last_name);
+
+--Create multi-index of first_name and last_name
+DROP INDEX IF EXISTS name_index;
+CREATE INDEX name_index ON Employees (first_name, last_name);
+
+
+
+	
