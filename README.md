@@ -87,6 +87,9 @@ Evidence in hand, you march into your boss's office and present the visualizatio
     - query.sql is the queries for data analysis
     - schema&quert.sql is the file that contains both the schema and query (which I used during the process)
     - sql_challenge_bonus.ipynb is the Jupyter Notebook for the Bonus part
+    - EXTRA_using_indexes folder (extra practice on using indexes): 
+      - A sql file with schema and query for the work done using indexes
+      - A folder with screenshots of the explains before and after using index
   
   - data folder contains the six csv data files
 
@@ -106,4 +109,6 @@ Here are the outside resources that I used for this assignment (as well as attem
   - https://blog.panoply.io/connecting-jupyter-notebook-with-postgresql-for-python-data-analysis
   - https://www.psycopg.org/docs/install.html
   - https://pythonspot.com/matplotlib-histogram/
+  - https://www.postgresqltutorial.com/postgresql-indexes/postgresql-create-index/
+  - https://devcenter.heroku.com/articles/postgresql-indexes
   
