@@ -199,4 +199,18 @@ CREATE INDEX lastname_index ON Employees (last_name);
 DROP INDEX IF EXISTS lastname_index;
 CREATE INDEX lastname_index ON Employees (last_name DESC);
 
-	
+--EXTRA Epilogue
+--It uses primary key as indexes
+EXPLAIN SELECT Employees.emp_no, Departments.dept_no, Departments.dept_name, Employees.emp_title_id,
+	Titles.title, Employees.first_name, Employees.last_name, Salaries.salary,
+	Employees.sex, Employees.birth_date, Employees.hire_date
+FROM Department_Employees
+INNER JOIN Departments ON
+Departments.dept_no = Department_Employees.dept_no
+INNER JOIN Salaries ON
+	Salaries.emp_no = Department_Employees.emp_no
+INNER JOIN Employees ON
+	Employees.emp_no = Department_Employees.emp_no
+INNER JOIN Titles ON
+Titles.title_id = Employees.emp_title_id
+WHERE Employees.emp_no = 499942;
